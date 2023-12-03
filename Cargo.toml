@@ -10,3 +10,4 @@ name = "aoc01"
 path = "src/aoc01.rs"
 
 [dependencies]
+regex = "1.10.2"
