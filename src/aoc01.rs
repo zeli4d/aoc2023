@@ -3,7 +3,7 @@ use std::env;
 use std::io::{self, BufRead};
 use std::fs::File;
 use std::path::Path;
-use regex::Regex;
+use fancy_regex::{Regex};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -35,45 +35,46 @@ fn main() {
 
     // println!("Input file: {}", input_path);
 
-    let re = Regex::new(r"[0-9]|zero|one|two|three|four|five|six|seven|eight|nine").unwrap();
-    // let mut results = vec![];
+    let re = Regex::new(r"(?=([0-9]|zero|one|two|three|four|five|six|seven|eight|nine))").unwrap();
 
     let mut suma: i32 = 0;
-    let mut first: &str;
-    let mut last: &str;
     let mut num: i32;
 
+
     if let Ok(lines) = read_lines(input_path) {
-        // Consumes the iterator, returns an (Optional) String
         for line in lines {
             if let Ok(ip) = line {
+                let mut all_captures = re.captures_iter(ip.as_str());
 
-                // print!("{}", ip);
 
-                let caps:Vec<_> = re.find_iter(ip.as_str()).map(|mat| mat.as_str()).collect();
+                let num_str = match all_captures.next() {
+                    None => continue,
+                    Some(m) => m.unwrap().get(1).unwrap().as_str()
+                };
 
-                first = "0";
-                last ="0";
 
-                if caps.len() == 1 {
-                    last = caps.last().unwrap();
-                } else if caps.len() > 1 {
-                    first = caps.first().unwrap();
-                    last = caps.last().unwrap();
+                let mut first = num_str;
+
+                let mut last = match all_captures.last() {
+                    None => "",
+                    Some(m) => m.unwrap().get(1).unwrap().as_str()
+                };
+
+
+                if last == "" {
+                    last = first;
+                    // first = "0";
                 }
 
-//todo: oneight
-                // print!(" {:?}", caps);
                 num = format!("{}{}", number.get(first).unwrap(), number.get(last).unwrap()).parse::<i32>().unwrap();
                 suma += num;
 
-                println!("{} {}, {} = {}", num, caps.first().unwrap(), caps.last().unwrap(), ip);
+                println!("{} {}, {} = {}", num, first, last, ip);
             }
         }
     }
 
     println!("celkem: {}", suma);
-
 }
 
 
