@@ -1,3 +1,5 @@
+mod aoc02;
+
 use std::collections::HashMap;
 use std::env;
 use std::io::{self, BufRead};
