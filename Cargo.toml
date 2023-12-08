@@ -15,6 +15,10 @@ path = "src/aoc01.rs"
 name = "aoc02"
 path = "src/aoc02.rs"
 
+[[bin]]
+name = "aoc02b"
+path = "src/aoc02b.rs"
+
 [dependencies]
 #regex = { version = "1.10.2", features = [] }
 fancy-regex = "0.12.0"
