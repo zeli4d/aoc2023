@@ -13,36 +13,45 @@ fn main() {
 
     let rx_gameid = Regex::new("^Game ([0-9]+): (.*)").unwrap();
 
-    let mut cntr = 5;
+    let mut cntr = 1;
+    let mut output_no = 0;
 
     if let Ok(lines) = read_lines(input_path) {
         for line in lines {
             cntr -= 1;
-            if cntr < 0 { break };
+            // if cntr < 0 { break };
             if let Ok(ip) = line {
+                println!("{}\n", ip.as_str());
+                let mut game_pass = 0;
 
                 let (full, [game_id,rounds]) = rx_gameid.captures(ip.as_str()).unwrap().extract();
-                // println!("G:'{}', '{}' - '{}'", game_id, rounds, ip.as_str());
-                for draws in rounds.split("; ") {
-                    // println!("{}", draws);
-                    for col in draws.split(", ") {
-                        let x = col.split_once(" ");
-                        if x.is_some_and(x.) {  }
-                        match col.split_once(" ") {
-                            Some((n, v) v = RED) => {
-
-                            },
-
-                            _ => {}
+                println!("G:{}", game_id);
+                println!("Rounds:{}", rounds);
+                for round in rounds.split("; ") {
+                    println!("Round: {}", round);
+                    for col in round.split(", ") {
+                        println!("Color: {}", col);
+                        let (pcs, col) = col.split_once(" ").unwrap();
+                        println!("{} = {}", col, pcs);
+                        match col {
+                            "red" => { if pcs.parse::<i32>().unwrap() > RED { game_pass += 1 }},
+                            "green" => { if pcs.parse::<i32>().unwrap() > GREEN { game_pass += 1 }},
+                            "blue" => { if pcs.parse::<i32>().unwrap() > BLUE { game_pass += 1 }},
+                            _ => {println!("Unknown color {}", col)}
                         }
-
                     }
+                }
+
+                if game_pass == 0 {
+                    output_no += game_id.parse::<i32>().unwrap();
                 }
 
             }
         }
     }
 
+    println!("================================");
+    println!("RESULT = {}", output_no)
 
 }
 
